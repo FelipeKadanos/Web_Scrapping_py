@@ -80,7 +80,12 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                 <strong>Produto mais barato:</strong>
 
                 {% if resumo.produto_mais_barato is not none %}
-                    {{ resumo.produto_mais_barato.nome }}
+
+                    {% if resumo.produto_mais_barato.nome is not none %}
+                        {{ resumo.produto_mais_barato.nome }}
+                    {% else %}
+                        Não disponível
+                    {% endif %}
 
                     {% if resumo.produto_mais_barato.preco is not none %}
                         - ${{ "%.2f"|format(resumo.produto_mais_barato.preco) }}
@@ -97,7 +102,12 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                 <strong>Produto mais caro:</strong>
 
                 {% if resumo.produto_mais_caro is not none %}
-                    {{ resumo.produto_mais_caro.nome }}
+
+                    {% if resumo.produto_mais_caro.nome is not none %}
+                        {{ resumo.produto_mais_caro.nome }}
+                    {% else %}
+                        Não disponível
+                    {% endif %}
 
                     {% if resumo.produto_mais_caro.preco is not none %}
                         - ${{ "%.2f"|format(resumo.produto_mais_caro.preco) }}
@@ -124,7 +134,12 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                 <strong>Produto melhor avaliado:</strong>
 
                 {% if resumo.produto_melhor_avaliado is not none %}
-                    {{ resumo.produto_melhor_avaliado.nome }}
+
+                    {% if resumo.produto_melhor_avaliado.nome is not none %}
+                        {{ resumo.produto_melhor_avaliado.nome }}
+                    {% else %}
+                        Não disponível
+                    {% endif %}
 
                     {% if resumo.produto_melhor_avaliado.avaliacao is not none %}
                         - {{ resumo.produto_melhor_avaliado.avaliacao }}
