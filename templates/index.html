@@ -65,6 +65,80 @@ Tela da aplicação para pesquisa e exibição dos produtos.
             <strong>Categoria pesquisada:</strong>
             {{ categoria_selecionada }}
         </p>
+
+        <!-- Resumo dos produtos encontrados -->
+        {% if resumo %}
+
+            <h3>Resumo</h3>
+
+            <p>
+                <strong>Quantidade de produtos:</strong>
+                {{ resumo.quantidade }}
+            </p>
+
+            <p>
+                <strong>Produto mais barato:</strong>
+
+                {% if resumo.produto_mais_barato is not none %}
+                    {{ resumo.produto_mais_barato.nome }}
+
+                    {% if resumo.produto_mais_barato.preco is not none %}
+                        - ${{ "%.2f"|format(resumo.produto_mais_barato.preco) }}
+                    {% else %}
+                        - Não disponível
+                    {% endif %}
+
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Produto mais caro:</strong>
+
+                {% if resumo.produto_mais_caro is not none %}
+                    {{ resumo.produto_mais_caro.nome }}
+
+                    {% if resumo.produto_mais_caro.preco is not none %}
+                        - ${{ "%.2f"|format(resumo.produto_mais_caro.preco) }}
+                    {% else %}
+                        - Não disponível
+                    {% endif %}
+
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Preço médio:</strong>
+
+                {% if resumo.preco_medio is not none %}
+                    ${{ "%.2f"|format(resumo.preco_medio) }}
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Produto melhor avaliado:</strong>
+
+                {% if resumo.produto_melhor_avaliado is not none %}
+                    {{ resumo.produto_melhor_avaliado.nome }}
+
+                    {% if resumo.produto_melhor_avaliado.avaliacao is not none %}
+                        - {{ resumo.produto_melhor_avaliado.avaliacao }}
+                    {% else %}
+                        - Não disponível
+                    {% endif %}
+
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+        {% endif %}
+
     {% endif %}
 
 </body>
