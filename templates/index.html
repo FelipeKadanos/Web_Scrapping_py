@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 
 <!--
-Parte 4 - Interface do sistema
-Responsável: Pessoa 4
+Card 4 - Interface do sistema
+Responsável: Pessoa 4/Murilo dos Santos
 
 Tela da aplicação para pesquisa e exibição dos produtos.
 -->
@@ -19,6 +19,40 @@ Tela da aplicação para pesquisa e exibição dos produtos.
     <!-- Título principal da aplicação -->
     <h1>Catálogo de Produtos com Web Scraping</h1>
 
+    <!-- Formulário para escolha da categoria -->
+    <form method="post" action="/">
+
+        <label for="categoria">Escolha uma categoria:</label>
+
+        <select name="categoria" id="categoria">
+
+            <option value="">Selecione uma categoria</option>
+
+            {% for categoria in categorias %}
+
+                {% if categoria == categoria_selecionada %}
+
+                    <option value="{{ categoria }}" selected>
+                        {{ categoria }}
+                    </option>
+
+                {% else %}
+
+                    <option value="{{ categoria }}">
+                        {{ categoria }}
+                    </option>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">Pesquisar</button>
+
+    </form>
+
 </body>
 
 </html>
+
