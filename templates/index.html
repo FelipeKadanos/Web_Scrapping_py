@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<!--
+Card 4 - Interface do sistema
+Responsável: Pessoa 4/Murilo dos Santos
+
+Tela da aplicação para pesquisa e exibição dos produtos.
+-->
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Produtos</title>
+
+    <!-- CSS simples para organizar a página -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            margin-bottom: 25px;
+        }
+
+        select,
+        button {
+            padding: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Título principal da aplicação -->
+    <h1>Catálogo de Produtos com Web Scraping</h1>
+
+    <!-- Formulário para escolha da categoria -->
+    <form method="post" action="/">
+
+        <label for="categoria">Escolha uma categoria:</label>
+
+        <select name="categoria" id="categoria">
+
+            <option value="">Selecione uma categoria</option>
+
+            {% for categoria in categorias %}
+
+                {% if categoria == categoria_selecionada %}
+
+                    <option value="{{ categoria }}" selected>
+                        {{ categoria }}
+                    </option>
+
+                {% else %}
+
+                    <option value="{{ categoria }}">
+                        {{ categoria }}
+                    </option>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </select>
+
+        <button type="submit">Pesquisar</button>
+
+    </form>
+
+    <!-- Exibe mensagem de erro, caso exista -->
+    {% if erro %}
+        <p>{{ erro }}</p>
+    {% endif %}
+
+    <!-- Exibe os resultados somente depois de uma pesquisa -->
+    {% if pesquisa_realizada %}
+        <h2>Resultados da pesquisa</h2>
+
+        <p>
+            <strong>Categoria pesquisada:</strong>
+            {{ categoria_selecionada }}
+        </p>
+
+        <!-- Resumo dos produtos encontrados -->
+        {% if resumo %}
+
+            <h3>Resumo</h3>
+
+            <p>
+                <strong>Quantidade de produtos:</strong>
+                {{ resumo.quantidade }}
+            </p>
+
+            <p>
+                <strong>Produto mais barato:</strong>
+
+                {% if resumo.produto_mais_barato is not none %}
+
+                    {% if resumo.produto_mais_barato.nome is not none %}
+                        {{ resumo.produto_mais_barato.nome }}
+                    {% else %}
+                        Não disponível
+                    {% endif %}
+
+                    {% if resumo.produto_mais_barato.preco is not none %}
+                        - ${{ "%.2f"|format(resumo.produto_mais_barato.preco) }}
+                    {% else %}
+                        - Não disponível
+                    {% endif %}
+
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Produto mais caro:</strong>
+
+                {% if resumo.produto_mais_caro is not none %}
+
+                    {% if resumo.produto_mais_caro.nome is not none %}
+                        {{ resumo.produto_mais_caro.nome }}
+                    {% else %}
+                        Não disponível
+                    {% endif %}
+
+                    {% if resumo.produto_mais_caro.preco is not none %}
+                        - ${{ "%.2f"|format(resumo.produto_mais_caro.preco) }}
+                    {% else %}
+                        - Não disponível
+                    {% endif %}
+
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Preço médio:</strong>
+
+                {% if resumo.preco_medio is not none %}
+                    ${{ "%.2f"|format(resumo.preco_medio) }}
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+            <p>
+                <strong>Produto melhor avaliado:</strong>
+
+                {% if resumo.produto_melhor_avaliado is not none %}
+
+                    {% if resumo.produto_melhor_avaliado.nome is not none %}
+                        {{ resumo.produto_melhor_avaliado.nome }}
+                    {% else %}
+                        Não disponível
+                    {% endif %}
+
+                    {% if resumo.produto_melhor_avaliado.avaliacao is not none %}
+                        - {{ resumo.produto_melhor_avaliado.avaliacao }}
+                    {% else %}
+                        - Não disponível
+                    {% endif %}
+
+                {% else %}
+                    Não disponível
+                {% endif %}
+            </p>
+
+        {% endif %}
+
+        <!-- Lista dos produtos encontrados -->
+        {% if produtos|length == 0 %}
+
+            <p>Nenhum produto encontrado.</p>
+
+        {% else %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Categoria</th>
+                        <th>Avaliação</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for produto in produtos %}
+
+                        <tr>
+
+                            <td>
+                                {% if produto.nome is not none %}
+                                    {{ produto.nome }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.preco is not none %}
+                                    ${{ "%.2f"|format(produto.preco) }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.categoria is not none %}
+                                    {{ produto.categoria }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.avaliacao is not none %}
+                                    {{ produto.avaliacao }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.link %}
+                                    <a href="{{ produto.link }}" target="_blank">
+                                        Ver produto
+                                    </a>
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% endif %}
+
+    {% endif %}
+
+</body>
+
+</html>
+
