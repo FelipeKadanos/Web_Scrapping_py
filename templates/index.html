@@ -139,6 +139,83 @@ Tela da aplicação para pesquisa e exibição dos produtos.
 
         {% endif %}
 
+        <!-- Lista dos produtos encontrados -->
+        {% if produtos|length == 0 %}
+
+            <p>Nenhum produto encontrado.</p>
+
+        {% else %}
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Categoria</th>
+                        <th>Avaliação</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for produto in produtos %}
+
+                        <tr>
+
+                            <td>
+                                {% if produto.nome is not none %}
+                                    {{ produto.nome }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.preco is not none %}
+                                    ${{ "%.2f"|format(produto.preco) }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.categoria is not none %}
+                                    {{ produto.categoria }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.avaliacao is not none %}
+                                    {{ produto.avaliacao }}
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if produto.link %}
+                                    <a href="{{ produto.link }}" target="_blank">
+                                        Ver produto
+                                    </a>
+                                {% else %}
+                                    Não disponível
+                                {% endif %}
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        {% endif %}
+
     {% endif %}
 
 </body>
