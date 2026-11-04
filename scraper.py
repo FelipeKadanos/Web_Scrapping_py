@@ -10,6 +10,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
+# URL base usada para montar os links dos produtos.
 BASE_URL = "https://scrapingsandbox.com"
 TIMEOUT = 20           # segundos por requisição
 TOTAL_PRODUTOS = 40    # coleta os produtos de id 1 até 40
@@ -17,12 +18,14 @@ PAUSA = 0.2            # o site aceita 60 requisições a cada 10 segundos
 
 
 def _texto(soup, seletor):
+    # Centraliza a leitura de textos para retornar None quando o campo não existir.
     """Texto do primeiro elemento que casa com o seletor, ou None."""
     tag = soup.select_one(seletor)
     return tag.get_text(strip=True) if tag else None
 
 
 def _numero(texto):
+    # Os valores são convertidos para float para que possam ser usados nos cálculos.
     """Converte '$107.53' em 107.53. Retorna None se não houver número."""
     try:
         return float(texto.replace("$", "").replace(",", "").strip())
@@ -31,6 +34,8 @@ def _numero(texto):
 
 
 def _interpretar_produto(html, link):
+    # BeautifulSoup interpreta o HTML e transforma os campos em um dicionário
+    # no formato combinado com os outros módulos do trabalho.
     """Lê uma página de produto e devolve o dicionário do contrato."""
     soup = BeautifulSoup(html, "html.parser")
     return {
@@ -49,16 +54,21 @@ def coletar_produtos() -> list[dict]:
     """
     produtos = []
     with requests.Session() as sessao:
+        # O site apresenta os produtos em páginas individuais. Assim, acessamos
+        # vários IDs para obter dados de mais de uma página sem usar Selenium.
         for id_produto in range(1, TOTAL_PRODUTOS + 1):
             link = f"{BASE_URL}/product/{id_produto}"  # um link por id: sem duplicados
             try:
                 resposta = sessao.get(link, timeout=TIMEOUT)
                 resposta.raise_for_status()
             except requests.RequestException as erro:
+                # Uma falha de rede ou HTTP interrompe a coleta para não apresentar
+                # uma lista parcial como se estivesse completa.
                 raise RuntimeError(f"Falha ao acessar {link}: {erro}") from erro
 
             produto = _interpretar_produto(resposta.text, link)
             if produto["nome"] is None:
+                # O nome é usado como verificação simples de que a página foi lida.
                 raise RuntimeError(f"Não foi possível ler {link}: o HTML do site pode ter mudado.")
             produtos.append(produto)
             time.sleep(PAUSA)

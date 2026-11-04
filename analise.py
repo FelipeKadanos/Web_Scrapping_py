@@ -1,4 +1,6 @@
 def filtrar_produtos(produtos: list[dict], categoria: str) -> list[dict]:
+    # A comparação ignora espaços externos e diferenças entre maiúsculas
+    # e minúsculas, sem alterar o texto original do produto.
     categoria_normalizada = categoria.strip().casefold()
     produtos_filtrados = []
 
@@ -6,11 +8,15 @@ def filtrar_produtos(produtos: list[dict], categoria: str) -> list[dict]:
         categoria_produto = produto["categoria"]
         if categoria_produto is not None:
             categoria_produto_normalizada = categoria_produto.strip().casefold()
+
+            # A comparação é exata para evitar misturar categorias parecidas.
             if categoria_produto_normalizada == categoria_normalizada:
                 produtos_filtrados.append(produto)
     return produtos_filtrados
 
 def calcular_resumo(produtos_filtrados: list[dict]) -> dict:
+    # A quantidade considera todos os produtos filtrados, mesmo os que não
+    # possuem preço ou avaliação.
     quantidade = len(produtos_filtrados)
     produtos_com_preco = []
 
@@ -18,6 +24,7 @@ def calcular_resumo(produtos_filtrados: list[dict]) -> dict:
         if produto["preco"] is not None:
             produtos_com_preco.append(produto)
 
+    # Preços ausentes não participam das comparações nem da média.
     produto_mais_barato = None
 
     for produto in produtos_com_preco:
@@ -33,6 +40,7 @@ def calcular_resumo(produtos_filtrados: list[dict]) -> dict:
     preco_medio = None
 
     if produtos_com_preco:
+        # A média é calculada somente com os preços disponíveis.
         soma_precos = 0
 
         for produto in produtos_com_preco:
@@ -42,6 +50,7 @@ def calcular_resumo(produtos_filtrados: list[dict]) -> dict:
 
     produto_melhor_avaliado = None
 
+    # A avaliação também pode estar ausente, por isso None é ignorado.
     for produto in produtos_filtrados:
         if produto["avaliacao"] is not None:
             if produto_melhor_avaliado is None or produto["avaliacao"] > produto_melhor_avaliado["avaliacao"]:
