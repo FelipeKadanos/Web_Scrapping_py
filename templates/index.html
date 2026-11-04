@@ -8,11 +8,9 @@ Tela da aplicação para pesquisa e exibição dos produtos.
 -->
 
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <title>Catálogo de Produtos</title>
-
     <!-- CSS simples para organizar a página -->
     <style>
         body {
@@ -42,45 +40,32 @@ Tela da aplicação para pesquisa e exibição dos produtos.
             text-align: left;
         }
     </style>
-
 </head>
 
 <body>
 
     <!-- Título principal da aplicação -->
     <h1>Catálogo de Produtos com Web Scraping</h1>
-
     <!-- Formulário para escolha da categoria -->
     <form method="post" action="/">
-
         <label for="categoria">Escolha uma categoria:</label>
 
         <select name="categoria" id="categoria">
-
             <option value="">Selecione uma categoria</option>
-
             {% for categoria in categorias %}
-
                 {% if categoria == categoria_selecionada %}
-
                     <option value="{{ categoria }}" selected>
                         {{ categoria }}
                     </option>
-
                 {% else %}
-
                     <option value="{{ categoria }}">
                         {{ categoria }}
                     </option>
-
                 {% endif %}
-
             {% endfor %}
-
         </select>
 
         <button type="submit">Pesquisar</button>
-
     </form>
 
     <!-- Exibe mensagem de erro, caso exista -->
@@ -91,17 +76,14 @@ Tela da aplicação para pesquisa e exibição dos produtos.
     <!-- Exibe os resultados somente depois de uma pesquisa -->
     {% if pesquisa_realizada %}
         <h2>Resultados da pesquisa</h2>
-
         <p>
             <strong>Categoria pesquisada:</strong>
             {{ categoria_selecionada }}
         </p>
-
         <!-- Resumo dos produtos encontrados -->
         {% if resumo %}
 
             <h3>Resumo</h3>
-
             <p>
                 <strong>Quantidade de produtos:</strong>
                 {{ resumo.quantidade }}
@@ -109,9 +91,7 @@ Tela da aplicação para pesquisa e exibição dos produtos.
 
             <p>
                 <strong>Produto mais barato:</strong>
-
                 {% if resumo.produto_mais_barato is not none %}
-
                     {% if resumo.produto_mais_barato.nome is not none %}
                         {{ resumo.produto_mais_barato.nome }}
                     {% else %}
@@ -131,7 +111,6 @@ Tela da aplicação para pesquisa e exibição dos produtos.
 
             <p>
                 <strong>Produto mais caro:</strong>
-
                 {% if resumo.produto_mais_caro is not none %}
 
                     {% if resumo.produto_mais_caro.nome is not none %}
@@ -187,13 +166,10 @@ Tela da aplicação para pesquisa e exibição dos produtos.
 
         <!-- Lista dos produtos encontrados -->
         {% if produtos|length == 0 %}
-
             <p>Nenhum produto encontrado.</p>
 
         {% else %}
-
             <table>
-
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -205,11 +181,8 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                 </thead>
 
                 <tbody>
-
                     {% for produto in produtos %}
-
                         <tr>
-
                             <td>
                                 {% if produto.nome is not none %}
                                     {{ produto.nome }}
@@ -217,7 +190,6 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                                     Não disponível
                                 {% endif %}
                             </td>
-
                             <td>
                                 {% if produto.preco is not none %}
                                     ${{ "%.2f"|format(produto.preco) }}
@@ -225,7 +197,6 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                                     Não disponível
                                 {% endif %}
                             </td>
-
                             <td>
                                 {% if produto.categoria is not none %}
                                     {{ produto.categoria }}
@@ -233,7 +204,6 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                                     Não disponível
                                 {% endif %}
                             </td>
-
                             <td>
                                 {% if produto.avaliacao is not none %}
                                     {{ produto.avaliacao }}
@@ -241,7 +211,6 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                                     Não disponível
                                 {% endif %}
                             </td>
-
                             <td>
                                 {% if produto.link %}
                                     <a href="{{ produto.link }}" target="_blank">
@@ -251,20 +220,11 @@ Tela da aplicação para pesquisa e exibição dos produtos.
                                     Não disponível
                                 {% endif %}
                             </td>
-
                         </tr>
-
                     {% endfor %}
-
                 </tbody>
-
             </table>
-
         {% endif %}
-
     {% endif %}
-
 </body>
-
 </html>
-
