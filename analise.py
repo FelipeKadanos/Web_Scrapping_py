@@ -1,65 +1,53 @@
-def filtrar_produtos(produtos: list[dict], categoria: str) -> list[dict]:
-    # A comparação ignora espaços externos e diferenças entre maiúsculas
-    # e minúsculas, sem alterar o texto original do produto.
+def filtrar_produtos(produtos: list[dict], categoria: str) -> list[dict]: # O -> list[dict] indica que a função retorna uma lista de dicionários
+
+    # Ignoramos espaços e diferenças de maiúsculas/minúsculas
     categoria_normalizada = categoria.strip().casefold()
     produtos_filtrados = []
 
     for produto in produtos:
-        categoria_produto = produto["categoria"]
-        if categoria_produto is not None:
-            categoria_produto_normalizada = categoria_produto.strip().casefold()
 
-            # A comparação é exata para evitar misturar categorias parecidas.
-            if categoria_produto_normalizada == categoria_normalizada:
+        if produto["categoria"] is not None:
+            
+            # Comparamos se a categoria do produto é igual à categoria escolhida
+            if produto["categoria"].strip().casefold() == categoria_normalizada:
                 produtos_filtrados.append(produto)
+
     return produtos_filtrados
 
-def calcular_resumo(produtos_filtrados: list[dict]) -> dict:
-    # A quantidade considera todos os produtos filtrados, mesmo os que não
-    # possuem preço ou avaliação.
-    quantidade = len(produtos_filtrados)
-    produtos_com_preco = []
+def calcular_resumo(produtos_filtrados: list[dict]) -> dict: # O -> list[dict] indica que a função retorna uma lista de dicionários
+    pdt_mais_barato = None
+    pdt_mais_caro = None
+    pdt_melhor_avaliado = None
 
-    for produto in produtos_filtrados:
-        if produto["preco"] is not None:
-            produtos_com_preco.append(produto)
+    soma_precos = 0
+    qtd_com_preco = 0
 
-    # Preços ausentes não participam das comparações nem da média.
-    produto_mais_barato = None
+    for pdt in produtos_filtrados:
 
-    for produto in produtos_com_preco:
-        if produto_mais_barato is None or produto["preco"] < produto_mais_barato["preco"]:
-            produto_mais_barato = produto
+        # Preços ausentes não entram nos cálculos.
+        if pdt["preco"] is not None:
+            soma_precos += pdt["preco"]
+            qtd_com_preco += 1
 
-    produto_mais_caro = None
+            if pdt_mais_barato is None or pdt["preco"] < pdt_mais_barato["preco"]:
+                pdt_mais_barato = pdt # Pra cada pdt com preço, se o preço dele for menor que o atual menor preço, ele se torna o menor preço
 
-    for produto in produtos_com_preco:
-        if produto_mais_caro is None or produto["preco"] > produto_mais_caro["preco"]:
-            produto_mais_caro = produto
+            if pdt_mais_caro is None or pdt["preco"] > pdt_mais_caro["preco"]:
+                pdt_mais_caro = pdt # Pra cada pdt com preço, se ele for maior que o atual maior preço, ele se torna o maior preço
+
+        if pdt["avaliacao"] is not None:
+            if (pdt_melhor_avaliado is None or pdt["avaliacao"] > pdt_melhor_avaliado["avaliacao"]):
+                pdt_melhor_avaliado = pdt # Se o pdt tem avaliação e ela for maior que a atual melhor avaliação, ele se torna o melhor avaliado
 
     preco_medio = None
 
-    if produtos_com_preco:
-        # A média é calculada somente com os preços disponíveis.
-        soma_precos = 0
-
-        for produto in produtos_com_preco:
-            soma_precos += produto["preco"]
-
-        preco_medio = soma_precos / len(produtos_com_preco)
-
-    produto_melhor_avaliado = None
-
-    # A avaliação também pode estar ausente, por isso None é ignorado.
-    for produto in produtos_filtrados:
-        if produto["avaliacao"] is not None:
-            if produto_melhor_avaliado is None or produto["avaliacao"] > produto_melhor_avaliado["avaliacao"]:
-                produto_melhor_avaliado = produto
+    if qtd_com_preco > 0:
+        preco_medio = soma_precos / qtd_com_preco
 
     return {
-        "quantidade": quantidade,
-        "produto_mais_barato": produto_mais_barato,
-        "produto_mais_caro": produto_mais_caro,
+        "quantidade": len(produtos_filtrados),
+        "produto_mais_barato": pdt_mais_barato,
+        "produto_mais_caro": pdt_mais_caro,
         "preco_medio": preco_medio,
-        "produto_melhor_avaliado": produto_melhor_avaliado,
+        "produto_melhor_avaliado": pdt_melhor_avaliado,
     }
